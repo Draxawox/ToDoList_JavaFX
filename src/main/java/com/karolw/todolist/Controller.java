@@ -2,6 +2,7 @@ package com.karolw.todolist;
 
 import com.karolw.todolist.datamodel.ToDoItem;
 import com.karolw.todolist.datamodel.TodoData;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,6 +16,7 @@ import javafx.util.Callback;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +62,15 @@ public class Controller {
             }
         });
 
-        todoListView.setItems(TodoData.getInstance().getTodoItems());
+        SortedList<ToDoItem> sortedList = new SortedList<ToDoItem>(TodoData.getInstance().getTodoItems(), new Comparator<ToDoItem>() {
+            @Override
+            public int compare(ToDoItem o1, ToDoItem o2) {
+                return o1.getDeadline().compareTo(o2.getDeadline());
+            }
+        });
+
+//        todoListView.setItems(TodoData.getInstance().getTodoItems());
+        todoListView.setItems(sortedList);
         todoListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         todoListView.getSelectionModel().selectFirst();
 
